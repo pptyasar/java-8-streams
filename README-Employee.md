@@ -1,0 +1,199 @@
+# Java 8 Streams – Employee Operations (32–40)
+
+Each method below includes a code sample and a sample input/output block.
+
+---
+
+## 32. Group employees by department
+
+```java
+public static Map<String, List<Employee>> groupByDepartment(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.groupingBy(Employee::getDepartment));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Employee> employees = Arrays.asList(
+    new Employee(1, "Alice", 70000, "IT"),
+    new Employee(2, "Bob", 60000, "HR"),
+    new Employee(3, "Carol", 80000, "IT"),
+    new Employee(4, "Diana", 50000, "HR")
+);
+System.out.println(EmployeeOperations.groupByDepartment(employees));
+
+// Sample Output:
+{IT=[Employee{id=1, name='Alice', ...}, Employee{id=3, name='Carol', ...}], HR=[Employee{id=2, name='Bob', ...}, Employee{id=4, name='Diana', ...}]}
+```
+_Note: Output may show object references or require Employee#toString for full formatting._
+
+---
+
+## 33. Find highest salary
+
+```java
+public static OptionalDouble findHighestSalary(List<Employee> employees) {
+    return employees.stream()
+            .mapToDouble(Employee::getSalary)
+            .max();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(EmployeeOperations.findHighestSalary(employees).getAsDouble());
+
+// Sample Output:
+80000.0
+```
+
+---
+
+## 34. Find second highest salary
+
+```java
+public static OptionalDouble findSecondHighestSalary(List<Employee> employees) {
+    return employees.stream()
+            .mapToDouble(Employee::getSalary)
+            .distinct()
+            .boxed()
+            .sorted(Collections.reverseOrder())
+            .skip(1)
+            .mapToDouble(Double::doubleValue)
+            .findFirst();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(EmployeeOperations.findSecondHighestSalary(employees).getAsDouble());
+
+// Sample Output:
+70000.0
+```
+
+---
+
+## 35. Find average salary by department
+
+```java
+public static Map<String, Double> averageSalaryByDepartment(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.groupingBy(
+                Employee::getDepartment,
+                Collectors.averagingDouble(Employee::getSalary)
+            ));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(EmployeeOperations.averageSalaryByDepartment(employees));
+
+// Sample Output:
+{IT=75000.0, HR=55000.0}
+```
+
+---
+
+## 36. Count employees in each department
+
+```java
+public static Map<String, Long> countEmployeesByDepartment(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.groupingBy(
+                Employee::getDepartment,
+                Collectors.counting()
+            ));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(EmployeeOperations.countEmployeesByDepartment(employees));
+
+// Sample Output:
+{IT=2, HR=2}
+```
+
+---
+
+## 37. Partition employees by salary > 50000
+
+```java
+public static Map<Boolean, List<Employee>> partitionBySalary(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.partitioningBy(emp -> emp.getSalary() > 50000));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(EmployeeOperations.partitionBySalary(employees));
+
+// Sample Output:
+{true=[Employee{id=1, ...}, Employee{id=2, ...}, Employee{id=3, ...}], false=[Employee{id=4, ...}]}
+```
+
+---
+
+## 38. Find employee with longest name
+
+```java
+public static Optional<Employee> employeeWithLongestName(List<Employee> employees) {
+    return employees.stream()
+            .max(Comparator.comparing(emp -> emp.getName().length()));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(EmployeeOperations.employeeWithLongestName(employees).get().getName());
+
+// Sample Output:
+"Carol"
+```
+
+---
+
+## 39. Find names starting with "A"
+
+```java
+public static List<String> namesStartingWithA(List<Employee> employees) {
+    return employees.stream()
+            .map(Employee::getName)
+            .filter(name -> name.startsWith("A"))
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(EmployeeOperations.namesStartingWithA(employees));
+
+// Sample Output:
+[Alice]
+```
+
+---
+
+## 40. Convert to comma-separated string
+
+```java
+public static String employeeNamesToString(List<Employee> employees) {
+    return employees.stream()
+            .map(Employee::getName)
+            .collect(Collectors.joining(", "));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(EmployeeOperations.employeeNamesToString(employees));
+
+// Sample Output:
+Alice, Bob, Carol, Diana
+```
+
+---

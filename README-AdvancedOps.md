@@ -1,0 +1,338 @@
+# Java 8 Streams – Advanced String and Employee Operations (78–93)
+
+Each method includes a code sample and a sample input/output block.
+
+---
+
+## 78. Group words by their length
+
+```java
+public static Map<Integer, List<String>> groupWordsByLength(String input) {
+    return Arrays.stream(input.split("\\s+"))
+            .collect(Collectors.groupingBy(String::length));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "one two three four";
+System.out.println(AdvancedOperations.groupWordsByLength(s));
+
+// Sample Output:
+{3=[one, two], 4=[four], 5=[three]}
+```
+
+---
+
+## 79. Count frequency using Map + Streams
+
+```java
+public static Map<String, Long> countWordFrequency(String input) {
+    return Arrays.stream(input.toLowerCase().split("\\s+"))
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "apple banana apple orange banana apple";
+System.out.println(AdvancedOperations.countWordFrequency(s));
+
+// Sample Output:
+{apple=3, banana=2, orange=1}
+```
+
+---
+
+## 80. Group numbers into odd/even
+
+```java
+public static Map<String, List<Integer>> groupOddEven(List<Integer> numbers) {
+    Map<Boolean, List<Integer>> partitioned = numbers.stream()
+            .collect(Collectors.partitioningBy(n -> n % 2 == 0));
+    Map<String, List<Integer>> result = new HashMap<>();
+    result.put("even", partitioned.get(true));
+    result.put("odd", partitioned.get(false));
+    return result;
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+System.out.println(AdvancedOperations.groupOddEven(nums));
+
+// Sample Output:
+{even=[2, 4], odd=[1, 3, 5]}
+```
+
+---
+
+## 81. Find highest salary employee
+
+```java
+public static Optional<Employee> highestSalaryEmployee(List<Employee> employees) {
+    return employees.stream()
+            .max(Comparator.comparing(Employee::getSalary));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.highestSalaryEmployee(employees).get().getName());
+
+// Sample Output:
+Carol
+```
+
+---
+
+## 82. Find lowest salary employee
+
+```java
+public static Optional<Employee> lowestSalaryEmployee(List<Employee> employees) {
+    return employees.stream()
+            .min(Comparator.comparing(Employee::getSalary));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.lowestSalaryEmployee(employees).get().getName());
+
+// Sample Output:
+Diana
+```
+
+---
+
+## 83. Find employees with salary > 50000
+
+```java
+public static List<Employee> employeesWithHighSalary(List<Employee> employees) {
+    return employees.stream()
+            .filter(emp -> emp.getSalary() > 50000)
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.employeesWithHighSalary(employees));
+
+// Sample Output:
+[Employee{id=1, name='Alice', ...}, Employee{id=2, name='Bob', ...}, Employee{id=3, name='Carol', ...}]
+```
+
+---
+
+## 84. Sort employees by salary ascending
+
+```java
+public static List<Employee> sortBySalaryAsc(List<Employee> employees) {
+    return employees.stream()
+            .sorted(Comparator.comparing(Employee::getSalary))
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.sortBySalaryAsc(employees));
+
+// Sample Output:
+[Employee{id=4, name='Diana', ...}, Employee{id=2, name='Bob', ...}, Employee{id=1, name='Alice', ...}, Employee{id=3, name='Carol', ...}]
+```
+
+---
+
+## 85. Sort employees by salary descending
+
+```java
+public static List<Employee> sortBySalaryDesc(List<Employee> employees) {
+    return employees.stream()
+            .sorted(Comparator.comparing(Employee::getSalary).reversed())
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.sortBySalaryDesc(employees));
+
+// Sample Output:
+[Employee{id=3, name='Carol', ...}, Employee{id=1, name='Alice', ...}, Employee{id=2, name='Bob', ...}, Employee{id=4, name='Diana', ...}]
+```
+
+---
+
+## 86. Group employees by department
+
+```java
+public static Map<String, List<Employee>> groupEmployeesByDept(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.groupingBy(Employee::getDepartment));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.groupEmployeesByDept(employees));
+
+// Sample Output:
+{IT=[Employee{id=1, ...}, Employee{id=3, ...}], HR=[Employee{id=2, ...}, Employee{id=4, ...}]}
+```
+
+---
+
+## 87. Count employees per department
+
+```java
+public static Map<String, Long> countEmployeesPerDept(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.counting()));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.countEmployeesPerDept(employees));
+
+// Sample Output:
+{IT=2, HR=2}
+```
+
+---
+
+## 88. Average salary per department
+
+```java
+public static Map<String, Double> avgSalaryPerDept(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.groupingBy(
+                Employee::getDepartment,
+                Collectors.averagingDouble(Employee::getSalary)
+            ));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.avgSalaryPerDept(employees));
+
+// Sample Output:
+{IT=75000.0, HR=55000.0}
+```
+
+---
+
+## 89. Max salary per department
+
+```java
+public static Map<String, Optional<Double>> maxSalaryPerDept(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.groupingBy(
+                Employee::getDepartment,
+                Collectors.mapping(Employee::getSalary, 
+                    Collectors.maxBy(Double::compareTo))
+            ));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.maxSalaryPerDept(employees));
+
+// Sample Output:
+{IT=Optional[80000.0], HR=Optional[60000.0]}
+```
+
+---
+
+## 90. Second highest salary overall
+
+```java
+public static OptionalDouble secondHighestSalary(List<Employee> employees) {
+    return employees.stream()
+            .mapToDouble(Employee::getSalary)
+            .distinct()
+            .boxed()
+            .sorted(Collections.reverseOrder())
+            .skip(1)
+            .mapToDouble(Double::doubleValue)
+            .findFirst();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.secondHighestSalary(employees).getAsDouble());
+
+// Sample Output:
+70000.0
+```
+
+---
+
+## 91. Nth highest salary
+
+```java
+public static OptionalDouble nthHighestSalary(List<Employee> employees, int n) {
+    return employees.stream()
+            .mapToDouble(Employee::getSalary)
+            .distinct()
+            .boxed()
+            .sorted(Collections.reverseOrder())
+            .skip(n - 1)
+            .mapToDouble(Double::doubleValue)
+            .findFirst();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.nthHighestSalary(employees, 3).getAsDouble());
+
+// Sample Output:
+60000.0
+```
+
+---
+
+## 92. Convert to Map id -> name
+
+```java
+public static Map<Integer, String> employeeIdToName(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.toMap(Employee::getId, Employee::getName));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.employeeIdToName(employees));
+
+// Sample Output:
+{1=Alice, 2=Bob, 3=Carol, 4=Diana}
+```
+
+---
+
+## 93. Convert to Map department -> list of employees
+
+```java
+public static Map<String, List<Employee>> deptToEmployees(List<Employee> employees) {
+    return employees.stream()
+            .collect(Collectors.groupingBy(Employee::getDepartment));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedOperations.deptToEmployees(employees));
+
+// Sample Output:
+{IT=[Employee{id=1, ...}, Employee{id=3, ...}], HR=[Employee{id=2, ...}, Employee{id=4, ...}]}
+```
+
+---

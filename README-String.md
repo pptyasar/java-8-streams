@@ -1,0 +1,289 @@
+# Java 8 Streams – String Processing (1–12)  
+**Each method includes a code sample and a sample input/output block to illustrate usage and expected results.**  
+
+---
+
+## 1. Count frequency of words in a sentence
+
+```java
+public static Map<String, Long> countWordFrequency(String sentence) {
+    return Arrays.stream(sentence.toLowerCase().split("\\s+"))
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "Hello world hello";
+System.out.println(StreamsSolutions.countWordFrequency(s));
+
+// Sample Output:
+{hello=2, world=1}
+```
+
+---
+
+## 2. Find the largest word from a string
+
+```java
+public static String findLargestWord(String input) {
+    return Arrays.stream(input.split("\\s+"))
+            .max(Comparator.comparing(String::length))
+            .orElse("");
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "a quick brown fox";
+System.out.println(StreamsSolutions.findLargestWord(s));
+
+// Sample Output:
+quick
+```
+
+---
+
+## 3. Find frequency of each character
+
+```java
+public static Map<Character, Long> characterFrequency(String input) {
+    return input.chars()
+            .mapToObj(c -> (char) c)
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "banana";
+System.out.println(StreamsSolutions.characterFrequency(s));
+
+// Sample Output:
+{a=3, b=1, n=2}
+```
+
+---
+
+## 4. Find first non-repeated character
+
+```java
+public static Character firstNonRepeatedChar(String input) {
+    Map<Character, Long> charCount = input.chars()
+            .mapToObj(c -> (char) c)
+            .collect(Collectors.groupingBy(Function.identity(), 
+                    LinkedHashMap::new, Collectors.counting()));
+    return charCount.entrySet().stream()
+            .filter(entry -> entry.getValue() == 1)
+            .map(Map.Entry::getKey)
+            .findFirst()
+            .orElse(null);
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "swiss";
+System.out.println(StreamsSolutions.firstNonRepeatedChar(s));
+
+// Sample Output:
+w
+```
+
+---
+
+## 5. Find first repeated character
+
+```java
+public static Character firstRepeatedChar(String input) {
+    Set<Character> seen = new HashSet<>();
+    return input.chars()
+            .mapToObj(c -> (char) c)
+            .filter(c -> !seen.add(c))
+            .findFirst()
+            .orElse(null);
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "abca";
+System.out.println(StreamsSolutions.firstRepeatedChar(s));
+
+// Sample Output:
+a
+```
+
+---
+
+## 6. Reverse each word
+
+```java
+public static String reverseEachWord(String input) {
+    return Arrays.stream(input.split("\\s+"))
+            .map(word -> new StringBuilder(word).reverse().toString())
+            .collect(Collectors.joining(" "));
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "hello world";
+System.out.println(StreamsSolutions.reverseEachWord(s));
+
+// Sample Output:
+olleh dlrow
+```
+
+---
+
+## 7. Find the longest word
+
+```java
+public static String findLongestWord(String input) {
+    return Arrays.stream(input.split("\\s+"))
+            .max(Comparator.comparing(String::length))
+            .orElse("");
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "fox jumps over";
+System.out.println(StreamsSolutions.findLongestWord(s));
+
+// Sample Output:
+jumps
+```
+
+---
+
+## 8. Find duplicate words
+
+```java
+public static List<String> findDuplicateWords(String input) {
+    Map<String, Long> wordCount = Arrays.stream(input.toLowerCase().split("\\s+"))
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+    return wordCount.entrySet().stream()
+            .filter(entry -> entry.getValue() > 1)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "big big small medium small";
+System.out.println(StreamsSolutions.findDuplicateWords(s));
+
+// Sample Output:
+[big, small]
+```
+
+---
+
+## 9. Check if palindrome using streams
+
+```java
+public static boolean isPalindrome(String input) {
+    String cleaned = input.toLowerCase().replaceAll("[^a-z]", "");
+    return IntStream.range(0, cleaned.length() / 2)
+            .allMatch(i -> cleaned.charAt(i) == cleaned.charAt(cleaned.length() - 1 - i));
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "A man a plan a canal Panama";
+System.out.println(StreamsSolutions.isPalindrome(s));
+
+// Sample Output:
+true
+```
+
+---
+
+## 10. Count vowels and consonants
+
+```java
+public static Map<String, Long> countVowelsConsonants(String input) {
+    Map<Boolean, Long> result = input.toLowerCase().chars()
+            .filter(Character::isLetter)
+            .mapToObj(c -> (char) c)
+            .collect(Collectors.partitioningBy(
+                c -> "aeiou".indexOf(c) != -1, Collectors.counting()));
+    Map<String, Long> finalResult = new HashMap<>();
+    finalResult.put("vowels", result.get(true));
+    finalResult.put("consonants", result.get(false));
+    return finalResult;
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "hello";
+System.out.println(StreamsSolutions.countVowelsConsonants(s));
+
+// Sample Output:
+{vowels=2, consonants=3}
+```
+
+---
+
+## 11. Extract unique words
+
+```java
+public static List<String> extractUniqueWords(String input) {
+    return Arrays.stream(input.toLowerCase().split("\\s+"))
+            .distinct()
+            .collect(Collectors.toList());
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "apple orange apple banana";
+System.out.println(StreamsSolutions.extractUniqueWords(s));
+
+// Sample Output:
+[apple, orange, banana]
+```
+
+---
+
+## 12. Find word(s) with maximum frequency
+
+```java
+public static List<String> wordsWithMaxFrequency(String input) {
+    Map<String, Long> wordCount = Arrays.stream(input.toLowerCase().split("\\s+"))
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+    long maxCount = wordCount.values().stream().mapToLong(Long::longValue).max().orElse(0);
+    return wordCount.entrySet().stream()
+            .filter(entry -> entry.getValue() == maxCount)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
+}
+```
+
+#### Sample Input/Output
+```java
+// Sample Input:
+String s = "cat dog dog bird cat cat";
+System.out.println(StreamsSolutions.wordsWithMaxFrequency(s));
+
+// Sample Output:
+[cat]
+```
+
+---

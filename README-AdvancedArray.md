@@ -1,0 +1,643 @@
+# Java 8 Streams – Advanced Array Operations (48–77)
+
+Each method includes a code sample and a sample input/output block.
+
+---
+
+## 48. Find all even numbers
+
+```java
+public static List<Integer> findEvenNumbers(List<Integer> numbers) {
+    return numbers.stream()
+            .filter(n -> n % 2 == 0)
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6);
+System.out.println(AdvancedArrayOperations.findEvenNumbers(nums));
+
+// Sample Output:
+[2, 4, 6]
+```
+
+---
+
+## 49. Find all odd numbers
+
+```java
+public static List<Integer> findOddNumbers(List<Integer> numbers) {
+    return numbers.stream()
+            .filter(n -> n % 2 != 0)
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6);
+System.out.println(AdvancedArrayOperations.findOddNumbers(nums));
+
+// Sample Output:
+[1, 3, 5]
+```
+
+---
+
+## 50. Find duplicate elements
+
+```java
+public static List<Integer> findDuplicateElements(List<Integer> numbers) {
+    return numbers.stream()
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+            .entrySet().stream()
+            .filter(entry -> entry.getValue() > 1)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 2, 3, 4, 4, 5);
+System.out.println(AdvancedArrayOperations.findDuplicateElements(nums));
+
+// Sample Output:
+[2, 4]
+```
+
+---
+
+## 51. Find unique elements
+
+```java
+public static List<Integer> findUniqueElements(List<Integer> numbers) {
+    return numbers.stream()
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+            .entrySet().stream()
+            .filter(entry -> entry.getValue() == 1)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 2, 3, 4, 4, 5);
+System.out.println(AdvancedArrayOperations.findUniqueElements(nums));
+
+// Sample Output:
+[1, 3, 5]
+```
+
+---
+
+## 52. Find maximum element
+
+```java
+public static OptionalInt findMaximum(List<Integer> numbers) {
+    return numbers.stream()
+            .mapToInt(Integer::intValue)
+            .max();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+System.out.println(AdvancedArrayOperations.findMaximum(nums).getAsInt());
+
+// Sample Output:
+5
+```
+
+---
+
+## 53. Find minimum element
+
+```java
+public static OptionalInt findMinimum(List<Integer> numbers) {
+    return numbers.stream()
+            .mapToInt(Integer::intValue)
+            .min();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(8, 3, 5, 2, 7);
+System.out.println(AdvancedArrayOperations.findMinimum(nums).getAsInt());
+
+// Sample Output:
+2
+```
+
+---
+
+## 54. Find second largest element
+
+```java
+public static OptionalInt findSecondLargest(List<Integer> numbers) {
+    return numbers.stream()
+            .mapToInt(Integer::intValue)
+            .distinct()
+            .boxed()
+            .sorted(Collections.reverseOrder())
+            .skip(1)
+            .mapToInt(Integer::intValue)
+            .findFirst();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(8, 3, 5, 2, 8, 7);
+System.out.println(AdvancedArrayOperations.findSecondLargest(nums).getAsInt());
+
+// Sample Output:
+7
+```
+
+---
+
+## 55. Find second smallest element
+
+```java
+public static OptionalInt findSecondSmallest(List<Integer> numbers) {
+    return numbers.stream()
+            .mapToInt(Integer::intValue)
+            .distinct()
+            .sorted()
+            .skip(1)
+            .findFirst();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(8, 3, 5, 2, 8, 7);
+System.out.println(AdvancedArrayOperations.findSecondSmallest(nums).getAsInt());
+
+// Sample Output:
+3
+```
+
+---
+
+## 56. Remove duplicates
+
+```java
+public static List<Integer> removeDuplicates(List<Integer> numbers) {
+    return numbers.stream()
+            .distinct()
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(2, 2, 3, 1, 3, 4);
+System.out.println(AdvancedArrayOperations.removeDuplicates(nums));
+
+// Sample Output:
+[2, 3, 1, 4]
+```
+
+---
+
+## 57. Sort ascending
+
+```java
+public static List<Integer> sortAscending(List<Integer> numbers) {
+    return numbers.stream()
+            .sorted()
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(4, 1, 5, 3);
+System.out.println(AdvancedArrayOperations.sortAscending(nums));
+
+// Sample Output:
+[1, 3, 4, 5]
+```
+
+---
+
+## 58. Sort descending
+
+```java
+public static List<Integer> sortDescending(List<Integer> numbers) {
+    return numbers.stream()
+            .sorted(Collections.reverseOrder())
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(4, 1, 5, 3);
+System.out.println(AdvancedArrayOperations.sortDescending(nums));
+
+// Sample Output:
+[5, 4, 3, 1]
+```
+
+---
+
+## 59. Sum of all elements
+
+```java
+public static int sumAllElements(List<Integer> numbers) {
+    return numbers.stream()
+            .mapToInt(Integer::intValue)
+            .sum();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(2, 4, 6);
+System.out.println(AdvancedArrayOperations.sumAllElements(nums));
+
+// Sample Output:
+12
+```
+
+---
+
+## 60. Average of all elements
+
+```java
+public static OptionalDouble averageOfElements(List<Integer> numbers) {
+    return numbers.stream()
+            .mapToInt(Integer::intValue)
+            .average();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 3, 4);
+System.out.println(AdvancedArrayOperations.averageOfElements(nums).getAsDouble());
+
+// Sample Output:
+2.5
+```
+
+---
+
+## 61. Partition into even and odd
+
+```java
+public static Map<Boolean, List<Integer>> partitionEvenOdd(List<Integer> numbers) {
+    return numbers.stream()
+            .collect(Collectors.partitioningBy(n -> n % 2 == 0));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+System.out.println(AdvancedArrayOperations.partitionEvenOdd(nums));
+
+// Sample Output:
+{false=[1, 3, 5], true=[2, 4]}
+```
+
+---
+
+## 62. Group by modulo 3
+
+```java
+public static Map<Integer, List<Integer>> groupByModulo3(List<Integer> numbers) {
+    return numbers.stream()
+            .collect(Collectors.groupingBy(n -> n % 3));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5, 6);
+System.out.println(AdvancedArrayOperations.groupByModulo3(nums));
+
+// Sample Output:
+{0=[3, 6], 1=[1, 4], 2=[2, 5]}
+```
+
+---
+
+## 63. Find numbers greater than 5
+
+```java
+public static List<Integer> numbersGreaterThan5(List<Integer> numbers) {
+    return numbers.stream()
+            .filter(n -> n > 5)
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(2, 7, 4, 9, 1);
+System.out.println(AdvancedArrayOperations.numbersGreaterThan5(nums));
+
+// Sample Output:
+[7, 9]
+```
+
+---
+
+## 64. Count elements greater than 5
+
+```java
+public static long countElementsGreaterThan5(List<Integer> numbers) {
+    return numbers.stream()
+            .filter(n -> n > 5)
+            .count();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(2, 7, 4, 9, 1);
+System.out.println(AdvancedArrayOperations.countElementsGreaterThan5(nums));
+
+// Sample Output:
+2
+```
+
+---
+
+## 65. Square of each element
+
+```java
+public static List<Integer> squareElements(List<Integer> numbers) {
+    return numbers.stream()
+            .map(n -> n * n)
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(2, 3, 4);
+System.out.println(AdvancedArrayOperations.squareElements(nums));
+
+// Sample Output:
+[4, 9, 16]
+```
+
+---
+
+## 66. Cube of each element
+
+```java
+public static List<Integer> cubeElements(List<Integer> numbers) {
+    return numbers.stream()
+            .map(n -> n * n * n)
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(2, 3, 4);
+System.out.println(AdvancedArrayOperations.cubeElements(nums));
+
+// Sample Output:
+[8, 27, 64]
+```
+
+---
+
+## 67. Find distinct squares
+
+```java
+public static List<Integer> distinctSquares(List<Integer> numbers) {
+    return numbers.stream()
+            .map(n -> n * n)
+            .distinct()
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(2, 3, 2, 4);
+System.out.println(AdvancedArrayOperations.distinctSquares(nums));
+
+// Sample Output:
+[4, 9, 16]
+```
+
+---
+
+## 68. Check if all elements are even
+
+```java
+public static boolean allElementsEven(List<Integer> numbers) {
+    return numbers.stream()
+            .allMatch(n -> n % 2 == 0);
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(2, 4, 6, 8);
+System.out.println(AdvancedArrayOperations.allElementsEven(nums));
+
+// Sample Output:
+true
+```
+
+---
+
+## 69. Check if any element is greater than 10
+
+```java
+public static boolean anyElementGreaterThan10(List<Integer> numbers) {
+    return numbers.stream()
+            .anyMatch(n -> n > 10);
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(2, 4, 6, 11);
+System.out.println(AdvancedArrayOperations.anyElementGreaterThan10(nums));
+
+// Sample Output:
+true
+```
+
+---
+
+## 70. Count frequency of numbers
+
+```java
+public static Map<Integer, Long> countFrequency(List<Integer> numbers) {
+    return numbers.stream()
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(1, 2, 2, 3, 3, 3);
+System.out.println(AdvancedArrayOperations.countFrequency(nums));
+
+// Sample Output:
+{1=1, 2=2, 3=3}
+```
+
+---
+
+## 71. Find first element
+
+```java
+public static Optional<Integer> findFirstElement(List<Integer> numbers) {
+    return numbers.stream()
+            .findFirst();
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(5, 8, 1);
+System.out.println(AdvancedArrayOperations.findFirstElement(nums).get());
+
+// Sample Output:
+5
+```
+
+---
+
+## 72. Find last element
+
+```java
+public static Optional<Integer> findLastElement(List<Integer> numbers) {
+    return numbers.stream()
+            .reduce((first, second) -> second);
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> nums = Arrays.asList(5, 8, 1);
+System.out.println(AdvancedArrayOperations.findLastElement(nums).get());
+
+// Sample Output:
+1
+```
+
+---
+
+## 73. Merge two lists
+
+```java
+public static List<Integer> mergeLists(List<Integer> list1, List<Integer> list2) {
+    return Stream.concat(list1.stream(), list2.stream())
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<Integer> l1 = Arrays.asList(1, 2);
+List<Integer> l2 = Arrays.asList(3, 4);
+System.out.println(AdvancedArrayOperations.mergeLists(l1, l2));
+
+// Sample Output:
+[1, 2, 3, 4]
+```
+
+---
+
+## 74. Flatten list of lists
+
+```java
+public static List<Integer> flattenLists(List<List<Integer>> listOfLists) {
+    return listOfLists.stream()
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+List<List<Integer>> lol = Arrays.asList(Arrays.asList(1, 2), Arrays.asList(3, 4));
+System.out.println(AdvancedArrayOperations.flattenLists(lol));
+
+// Sample Output:
+[1, 2, 3, 4]
+```
+
+---
+
+## 75. Generate first 10 even numbers
+
+```java
+public static List<Integer> generateFirst10EvenNumbers() {
+    return IntStream.iterate(2, n -> n + 2)
+            .limit(10)
+            .boxed()
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedArrayOperations.generateFirst10EvenNumbers());
+
+// Sample Output:
+[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+```
+
+---
+
+## 76. Generate first 10 odd numbers
+
+```java
+public static List<Integer> generateFirst10OddNumbers() {
+    return IntStream.iterate(1, n -> n + 2)
+            .limit(10)
+            .boxed()
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedArrayOperations.generateFirst10OddNumbers());
+
+// Sample Output:
+[1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+```
+
+---
+
+## 77. Generate Fibonacci series of 10 numbers
+
+```java
+public static List<Integer> generateFibonacci10() {
+    return Stream.iterate(new int[]{0, 1}, fib -> new int[]{fib[1], fib[0] + fib[1]})
+            .limit(10)
+            .map(fib -> fib[0])
+            .collect(Collectors.toList());
+}
+```
+#### Sample Input/Output
+```java
+// Sample Input:
+System.out.println(AdvancedArrayOperations.generateFibonacci10());
+
+// Sample Output:
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+```
+
+---
